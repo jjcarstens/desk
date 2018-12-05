@@ -16,6 +16,7 @@ defmodule Web.Application do
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
+    :ets.new(:desk_heights, [:public, :named_table, :set, read_concurrency: true])
     opts = [strategy: :one_for_one, name: Web.Supervisor]
     Supervisor.start_link(children, opts)
   end

@@ -25,6 +25,11 @@ config :web, Web.Endpoint,
     ]
   ]
 
+config :web, :allowed_controllers,
+  [
+    "some_controller_id"
+  ]
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed
@@ -56,6 +61,6 @@ config :web, Web.Endpoint,
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
       ~r{priv/gettext/.*(po)$},
       ~r{lib/web/views/.*(ex)$},
-      ~r{lib/web/templates/.*(eex)$}
+      ~r{lib/web/templates/.*(eex|drab)$}
     ]
   ]
