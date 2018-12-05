@@ -4,6 +4,18 @@ use Mix.Config
 config :web,
   generators: [context_app: false]
 
+# Configures Drab
+config :drab, Web.Endpoint,
+  otp_app: :web
+
+# Configures default Drab file extension
+config :phoenix, :template_engines,
+  drab: Drab.Live.Engine
+
+# Configures Drab for webpack
+config :drab, Web.Endpoint,
+  js_socket_constructor: "window.__socket"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
