@@ -15,7 +15,7 @@ use Mix.Config
 # before starting your production server.
 config :web, Web.Endpoint,
   http: [:inet6, port: System.get_env("PORT") || 4000],
-  url: [host: "dudewheresmydesk.live", port: 443],
+  url: [host: "dudewheresmydesk.live"],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # ## SSL Support
