@@ -8,24 +8,26 @@ defmodule Controller.Application do
   use Application
 
   def start(_type, _args) do
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Controller.Supervisor]
     Supervisor.start_link(children(@target), opts)
   end
 
   # List all child processes to be supervised
-  def children("host") do
+  def children(target) do
     [
-      # Starts a worker by calling: Controller.Worker.start_link(arg)
-      # {Controller.Worker, arg},
-    ]
+      {Controller.Reporter, []}
+    ] ++ target_children(target)
   end
 
-  def children(_target) do
+  defp target_children("host") do
     [
-      # Starts a worker by calling: Controller.Worker.start_link(arg)
-      # {Controller.Worker, arg},
+      # {Controller.Reader, [%{port: "/dev/tty.usbmodem"}]}
     ]
   end
+  defp target_children("rpi" <> _) do
+    [
+      {Controller.Reader, []}
+    ]
+  end
+  defp target_children(_target), do: []
 end
