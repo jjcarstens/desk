@@ -70,3 +70,6 @@ config :web, Web.Endpoint,
 config :web, Web.Endpoint,
   secret_key_base: System.get_env("SECRET_KEY_BASE"),
   server: true
+
+# TODO: Handle this in a less jenky way
+config :web, :allowed_controllers, String.split(System.get_env("ALLOWED_CONTROLLERS"))
