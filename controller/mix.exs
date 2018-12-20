@@ -38,6 +38,8 @@ defmodule Controller.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:circuits_uart, "~> 1.3"},
+      {:jason, "~> 1.1"},
       {:nerves, "~> 1.3", runtime: false},
       {:shoehorn, "~> 0.4"},
       {:ring_logger, "~> 0.6"},

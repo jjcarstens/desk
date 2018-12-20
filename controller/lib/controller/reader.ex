@@ -29,7 +29,7 @@ defmodule Controller.Reader do
                            end
                            |> Integer.digits()
 
-    new_height = "#{tens}#{ones}.#{tenths}"
+    new_height = "#{tens}#{ones}.#{tenths}" |> String.to_float()
 
     if new_height != state.current_height do
       send Reporter, {:height_update, new_height}
