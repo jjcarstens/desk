@@ -1,3 +1,22 @@
 /* This file is for your main application css. */
 
 @import "./phoenix.css";
+
+.desk_leg {
+  border-right: 15px solid silver;
+  border-left: 15px solid silver;
+  margin: 0px 20px;
+}
+
+.desk_feet {
+  border-right: 35px solid silver;
+  border-left: 35px solid silver;
+  margin: 0px 10px;
+  height: 10px;
+}
+
+.desktop {
+  height: 26px;
+  width: 100%;
+  background-color: brown;
+}

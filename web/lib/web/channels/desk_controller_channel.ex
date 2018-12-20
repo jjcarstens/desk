@@ -19,7 +19,20 @@ defmodule Web.DeskControllerChannel do
   end
 
   def handle_in("height_update", payload, socket) do
-    broadcast_from! socket, "height_update", payload
-    {:noreply, socket}
+    case validate_height(payload) do
+      :ok ->
+        broadcast_from! socket, "height_update", payload
+        {:noreply, socket}
+      error ->
+        {:reply, error, socket}
+    end
+  end
+
+  defp validate_height(%{"current_height" => height}) when is_float(height), do: :ok
+  defp validate_height(%{"current_height" => _height}) do
+    {:error, %{message: "current_height must be a float"}}
+  end
+  defp validate_height(_payload) do
+    {:error, %{message: "payload must include current_height key with a float value"}}
   end
 end

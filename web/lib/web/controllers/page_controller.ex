@@ -8,7 +8,7 @@ defmodule Web.PageController do
   defp get_current_height do
     case :ets.lookup(:desk_heights, :jonjon) do
       [{:jonjon, height}] -> height
-      _ -> "¯\\_(ツ)_/¯"
+      _ -> 25.3
     end
   end
 end
