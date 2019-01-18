@@ -15,7 +15,7 @@ config :nerves_firmware_ssh,
   authorized_keys: [File.read!(Path.join(System.user_home!(), ".ssh/mx.pub"))]
 
 config :nerves_init_gadget,
-  ifname: "wlan0",
+  ifname: "eth0",
   address_method: :dhcp,
   node_host: :mdns_domain,
   ssh_console_port: 22,
@@ -23,6 +23,24 @@ config :nerves_init_gadget,
   mdns_domain: System.get_env("MDNS_DOMAIN") || "desk.local"
 
 config :nerves, :firmware, rootfs_overlay: "rootfs_overlay"
+
+config :nerves_network, regulatory_domain: "US"
+
+[ssid, psk] = File.read!(".wlan_settings") |> String.split("\n", trim: true)
+
+config :nerves_network, :default,
+  wlan0: [
+    networks: [
+      [
+        ssid: ssid,
+        psk: psk,
+        key_mgmt: :"WPA-PSK"
+      ]
+    ]
+  ],
+  eth0: [
+    ipv4_address_method: :dhcp
+  ]
 
 # Use shoehorn to start the main application. See the shoehorn
 # docs for separating out critical OTP applications such as those
