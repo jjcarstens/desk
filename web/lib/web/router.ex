@@ -17,6 +17,7 @@ defmodule Web.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/randoms", RandomsController, :index
   end
 
   # Other scopes may use custom stacks.

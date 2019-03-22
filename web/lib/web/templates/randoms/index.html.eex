@@ -1,0 +1,4 @@
+<div>
+<h1>Turns</h1>
+<h2><%= @selected %></h2>
+</div>
