@@ -6,7 +6,8 @@ defmodule Controller.MixProject do
   def project do
     [
       app: :controller,
-      version: "0.1.0",
+      name: "desk-controller",
+      version: "0.1.2",
       elixir: "~> 1.6",
       target: @target,
       archives: [nerves_bootstrap: "~> 1.0"],
@@ -40,7 +41,8 @@ defmodule Controller.MixProject do
     [
       {:circuits_uart, "~> 1.3"},
       {:jason, "~> 1.1"},
-      {:nerves, "~> 1.3", runtime: false},
+      {:nerves, "~> 1.4", runtime: false},
+      {:nerves_hub, "~> 0.1"},
       {:shoehorn, "~> 0.4"},
       {:ring_logger, "~> 0.6"},
       {:toolshed, "~> 0.2"},

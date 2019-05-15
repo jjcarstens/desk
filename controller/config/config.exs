@@ -29,6 +29,9 @@ config :nerves_network, regulatory_domain: "US"
 [ssid, psk] = File.read!(".wlan_settings") |> String.split("\n", trim: true)
 
 config :nerves_network, :default,
+  eth0: [
+    ipv4_address_method: :dhcp
+  ],
   wlan0: [
     networks: [
       [
@@ -37,10 +40,8 @@ config :nerves_network, :default,
         key_mgmt: :"WPA-PSK"
       ]
     ]
-  ],
-  eth0: [
-    ipv4_address_method: :dhcp
   ]
+
 
 # Use shoehorn to start the main application. See the shoehorn
 # docs for separating out critical OTP applications such as those
@@ -60,8 +61,41 @@ config :logger, handle_otp_reports: true, handle_sasl_reports: true
 config :controller, :websocket_url, System.get_env("WEBSOCKET_URL") || "ws://localhost:4000/desk_controller_socket/websocket"
 config :controller, :id, System.get_env("CONTROLLER_ID") || "some_controller_id"
 
-# Import target specific config. This must remain at the bottom
-# of this file so it overrides the configuration defined above.
-# Uncomment to use target specific configurations
+config :nerves, :firmware, provisioning: :nerves_hub
 
-# import_config "#{Mix.Project.config[:target]}.exs"
+# For connecting to NervesHub without NervesKey.
+# See https://github.com/nerves-hub/nerves_hub#initializing-devices
+# for more info on generating device and create certs.
+config :controller,
+  certfile: File.read!("./nerves-hub/desk-controller-cert.pem"),
+  keyfile: File.read!("./nerves-hub/desk-controller-key.pem")
+
+# This is a firmware signing key local to my machine.
+# To use NervesHub, you will need to generate your own and
+# place it here.
+# see https://github.com/nerves-hub/nerves_hub#creating-nerveshub-firmware-signing-keys
+config :nerves_hub,
+  fwup_public_keys: [:controller_key],
+  remote_iex: true # disable if you don't want remote iex in NervesHub
+
+if Mix.target() == :host do
+  config :nerves_runtime, :kernel, autoload_modules: false
+  config :nerves_runtime, target: "host"
+
+  config :nerves_runtime, Nerves.Runtime.KV.Mock, %{
+    "nerves_fw_active" => "a",
+    "a.nerves_fw_uuid" => "924d4d6c-c4c5-50c3-aee8-1f6975ecec87",
+    "a.nerves_fw_product" => "genie_hub",
+    "a.nerves_fw_architecture" => "arm", # arm?
+    "a.nerves_fw_version" => "0.2.0",
+    "a.nerves_fw_platform" => "arm",
+    "a.nerves_fw_misc" => "extra comments",
+    "a.nerves_fw_description" => "Genie controller for home automation fun",
+    "nerves_fw_devpath" => "/tmp/fwup_bogus_path",
+    "nerves_serial_number" => "test"
+  }
+
+  config :nerves_runtime, :modules, [
+    {Nerves.Runtime.KV, Nerves.Runtime.KV.Mock}
+  ]
+end

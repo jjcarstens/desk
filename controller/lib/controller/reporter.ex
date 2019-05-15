@@ -2,6 +2,8 @@ defmodule Controller.Reporter do
   use WebSockex
   require Logger
 
+  alias Controller.Reader
+
   def start_link(state) do
     url = Application.get_env(:controller, :websocket_url)
     id = Application.get_env(:controller, :id)
@@ -21,10 +23,7 @@ defmodule Controller.Reporter do
   end
 
   @impl true
-  def handle_frame({:text, msg}, state) do
-    Logger.info("WEBSOCKET RECEIVE: #{msg}")
-    {:ok, state}
-  end
+  def handle_frame({:text, msg}, state), do: handle_message(msg, state)
 
   @impl true
   def handle_info({:height_update, new_height}, state) do
@@ -54,5 +53,21 @@ defmodule Controller.Reporter do
   @impl true
   def handle_cast({:send, frame}, state) do
     {:reply, frame, state}
+  end
+
+  defp handle_message(%{"event" => "get_height"}, state) do
+    msg = %{
+      payload: %{current_height: Reader.current_height},
+      event: "height_update",
+      topic: "desk_controller:jonjon",
+      ref: "sdfarewr"
+    } |> Jason.encode!()
+
+    {:reply, {:text, msg}, state}
+  end
+
+  defp handle_message(msg, state) do
+    Logger.debug("WEBSOCKET RECEIVE: #{msg}")
+    {:ok, state}
   end
 end

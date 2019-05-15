@@ -14,7 +14,15 @@ defmodule Controller.Application do
 
   # List all child processes to be supervised
   def children(target) do
+    cert = Application.get_env(:controller, :certfile)
+           |> NervesHub.Certificate.pem_to_der
+
+    key = Application.get_env(:controller, :keyfile)
+          |> X509.PrivateKey.from_pem!
+          |> X509.PrivateKey.to_der()
+
     [
+      {NervesHub.Supervisor, [cert: cert, key: {:ECPrivateKey, key}]},
       {Controller.Reporter, []}
     ] ++ target_children(target)
   end

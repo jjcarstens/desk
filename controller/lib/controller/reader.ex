@@ -16,6 +16,10 @@ defmodule Controller.Reader do
     {:ok, state}
   end
 
+  def current_height, do: GenServer.call(__MODULE__, :current_height)
+
+  def handle_call(:current_height, state), do: {:reply, state.current_height, state}
+
   def handle_info(:init, %{port: port} = state) do
     {:ok, uart} = UART.start_link()
     :ok = UART.open(uart, port, framing: UART.Framing.FourByte, rx_framing_timeout: 10)
